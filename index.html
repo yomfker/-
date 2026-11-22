@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#263526">
+  <meta name="description" content="公開使用的戰鬥陀螺比賽海報設計工具。免登入、無付費 API；本機去背、字型調整、多種版型與高解析 PNG。">
+  <title>SPIN STUDIO｜戰鬥陀螺海報設計室</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="SPIN STUDIO 首頁"><span class="brand-icon">✳</span><span>SPIN<span class="brand-light">STUDIO</span><small>戰鬥陀螺海報設計室</small></span></a>
+    <div class="top-actions"><span class="static-badge">免登入 · 純靜態版</span><button class="button quiet" id="helpBtn">使用說明</button><button class="button primary" id="exportTop">匯出海報</button></div>
+  </header>
+  <main class="workspace">
+    <aside class="editor">
+      <div class="editor-heading"><span class="eyebrow">YOUR TOURNAMENT. YOUR DESIGN.</span><h1>打造屬於你的<br>陀螺比賽主場。</h1><p>所有編輯與去背都在你的裝置內完成。</p></div>
+      <nav class="tabs" aria-label="編輯類別">
+        <button class="tab active" data-tab="info" aria-pressed="true">比賽資訊</button><button class="tab" data-tab="design" aria-pressed="false">背景字型</button><button class="tab" data-tab="hero" aria-pressed="false">主視覺</button><button class="tab" data-tab="prizes" aria-pressed="false">獎品圖片</button>
+      </nav>
+      <section class="panel" id="panel-info"><div class="section-intro"><h2>比賽資訊</h2><span>13 項皆可留空</span></div><form id="infoForm" autocomplete="off"></form><div class="section-actions"><button id="clearFields" class="text-button">清空比賽資訊</button><button id="loadDemo" class="text-button">載入示範</button></div></section>
+      <section class="panel" id="panel-design" hidden>
+        <div class="section-intro"><h2>選擇背景版型</h2><span>5 款專屬排版</span></div><div id="templateList" class="template-grid"></div>
+        <p class="hint">每個版型都保留文字、主視覺、獎品與 QR code 的獨立區域。</p>
+        <h3>色彩</h3><div id="palettes" class="palette-grid"></div><div class="color-grid"><label>重點色<input id="accentColor" type="color" value="#d9a820"></label><label>背景色<input id="paperColor" type="color" value="#eee8d9"></label><label>文字色<input id="inkColor" type="color" value="#141b17"></label></div><p class="hint">所有背景都能自訂三種顏色。文字對比不足時會自動調整為黑或白。</p>
+        <div class="divider"></div><h2>字型與大小</h2><label class="field">標題字型<select id="titleFont" aria-label="標題字型"></select></label><label class="field">內文字型<select id="bodyFont" aria-label="內文字型"></select></label><p class="hint">提供裝置內的黑體、明體、楷體等基礎字型，未安裝的字型會使用系統替代字型。不下載外部字型。</p>
+        <div id="fontSizeControls"></div><p class="hint">字級以各版型的基準大小為 100%。內容太多時會自動縮小，確保不超出文字區域。</p><button id="resetTypography" class="button outline full">重設字型與大小</button>
+      </section>
+      <section class="panel" id="panel-hero" hidden><div class="section-intro"><h2>主視覺陀螺</h2><span>獨立圖片調整</span></div><p class="hint">搜尋或上傳你指定的陀螺，調整到最適合這場比賽的位置。</p><div id="heroEditor"></div><button id="resetHero" class="text-button">恢復金色示範陀螺</button></section>
+      <section class="panel" id="panel-prizes" hidden><div class="section-intro"><h2>獎品圖片</h2><span id="prizeCount">0 / 12</span></div><p class="hint">每張獎品圖片皆有獨立大小、位置、旋轉與去背容差。圖片移動範圍限於自己的圖片框，不會遮住文字。</p><div id="prizeList"></div><button id="addPrize" class="button outline full">＋ 新增獎品</button></section>
+      <footer class="editor-footer"><span id="saveStatus" role="status">儲存於此裝置</span><div><button id="saveProject" class="text-button">儲存專案</button><button id="openProject" class="text-button">開啟專案</button><button id="jumpPreview" class="text-button">查看海報</button></div></footer>
+    </aside>
+    <section class="preview-section" id="previewSection" aria-label="海報即時預覽">
+      <div class="preview-toolbar"><div><span class="live-dot"></span><strong>即時預覽</strong><span id="templateName">冠軍斜線</span></div><button id="fitPreview" class="icon-button" title="放大預覽" aria-label="放大預覽">⛶</button></div>
+      <div class="poster-stage"><canvas id="poster" width="1200" height="1700" aria-label="比賽海報預覽：內容隨編輯設定即時更新"></canvas></div>
+      <div class="preview-bottom"><span>文字與圖片保持獨立閱讀空間</span><span>1200 × 1700</span></div>
+      <div class="export-strip"><div><strong>設計完成，準備開賽。</strong><p>下載高解析 PNG，分享你的比賽。</p></div><button class="button dark" id="exportBottom">下載海報</button></div>
+    </section>
+  </main>
+  <dialog id="searchDialog"><div class="modal-header"><div><span class="eyebrow">FIND YOUR SPIN</span><h2 id="searchTitle">搜尋圖片</h2></div><button class="icon-button" data-close="searchDialog" aria-label="關閉搜尋">×</button></div><form id="searchForm" class="search-form"><input id="searchQuery" placeholder="例如 Beyblade CX11、戰鬥陀螺" maxlength="200" aria-label="圖片搜尋關鍵字"><button class="button primary" id="searchSubmit">搜尋</button></form><div class="source-bar"><span>Wikimedia Commons · 免費公開搜尋</span><a id="externalSearch" href="https://www.google.com/search?tbm=isch&amp;q=Beyblade" target="_blank" rel="noopener noreferrer">在 Google 圖片尋找</a></div><label class="range-label">選圖去背容差 <output id="searchToleranceValue">42</output><input id="searchTolerance" type="range" min="5" max="160" value="42" aria-label="選圖去背容差"></label><p id="searchStatus" class="hint" role="status">Commons 不一定收錄指定商品型號，找不到時可到 Google 圖片尋找後下載上傳。</p><div id="searchResults" class="results-grid"></div><div class="modal-footer"><span class="hint">請確認素材授權。若來源限制跨站下載，請下載後上傳；不使用圖片代理或付費服務。</span><button id="uploadFromSearch" class="button outline">上傳自己的圖片</button></div></dialog>
+  <dialog id="exportDialog"><div class="modal-header"><div><span class="eyebrow">READY TO SHARE</span><h2>匯出你的比賽海報</h2></div><button class="icon-button" data-close="exportDialog" aria-label="關閉匯出">×</button></div><p class="hint">所有圖片與文字都在裝置內合成，無需登入或金鑰。</p><label class="export-option"><input type="radio" name="resolution" value="1200"><span><strong>標準</strong><small>1200 × 1700 px · 輕巧分享</small></span></label><label class="export-option"><input type="radio" name="resolution" value="2400" checked><span><strong>高解析度</strong><small>2400 × 3400 px · 建議使用</small></span><b>推薦</b></label><label class="export-option"><input type="radio" name="resolution" value="3600"><span><strong>超高解析度</strong><small>3600 × 5100 px · 需要較多裝置記憶體</small></span></label><p id="exportStatus" class="hint" role="status"></p><button id="downloadPng" class="button primary full">下載 PNG</button><div id="downloadFallback" hidden><p class="hint">若手機未自動下載，可開啟圖片後長按儲存。</p><a id="downloadLink" class="button outline full" target="_blank" rel="noopener">開啟海報圖片</a></div></dialog>
+  <dialog id="helpDialog"><div class="modal-header"><h2>開始設計你的比賽海報</h2><button class="icon-button" data-close="helpDialog" aria-label="關閉說明">×</button></div><ol class="help-list"><li>編輯 13 項資訊，留空內容會自動隱藏。</li><li>在「背景字型」選擇版型、顏色、字型與各區字級。</li><li>主視覺與每張獎品圖均可搜尋或上傳。</li><li>每張圖都有自己的邊緣容差。調整後點選同一張圖的「重新去背」，會從保留的原圖重新處理。</li><li>調整圖片大小、位置與旋轉，再下載 PNG。</li><li>儲存專案 JSON，可在其他裝置繼續編輯，也可匯入舊版專案。</li></ol><p class="hint">本程式無帳號、無伺服器、無付費 API。圖片搜尋才會連線至 Commons，選圖會連線至圖片來源；編輯、上傳、重新去背與匯出均在本機完成。</p><p class="hint">本機去背適用白底或其他單色背景。複雜場景可能需要先修圖或改用透明 PNG。內建金色陀螺是示範素材，不代表特定商品型號。</p><p class="hint">圖片位置限於各自的框內；放大或移出框外的部分會裁切，避免覆蓋文字與 QR code。字型依裝置安裝情況顯示。請定期另存專案，以免瀏覽器清理資料。</p><button class="button primary full" data-close="helpDialog">開始設計</button></dialog>
+  <input id="imageUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden><input id="projectUpload" type="file" accept="application/json,.json" hidden><div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
+
